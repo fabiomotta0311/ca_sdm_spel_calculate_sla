@@ -1,0 +1,134 @@
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Author:      Fabio Motta
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//  Verifica o numero do chamado e seta o tempo do SLA
+//  	Tempo Total e tempo total SLA
+//////////////////////////////////////////////////////////////////////////////////////////////
+cr::z_Calcula_Tempo_SLA(...){
+	
+	//Campos condicionalmente obrigatorio 
+	int debug_mode;
+	debug_mode = 1; //mude para 0 para cancelar o debug mode
+
+
+	if (debug_mode == 1){
+		logf(SIGNIFICANT, "z_Calcula_Tempo_SLA.spl -- Iniciando spel - TENANT_NAME");
+	}
+
+	// Verifica se é um chamado da TENANT_NAME
+	string ztenant;
+	ztenant=format(tenant.name);
+	if (ztenant != "TENANT_NAME") {
+		if (debug_mode == 1){
+			logf(SIGNIFICANT, "z_Calcula_Tempo_SLA.spl -- Ticket Nao eh da TENANT_NAME. Saindo do SPEL...");
+		}
+		return;  // Se não for da TENANT_NAME não faz nada
+	}
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+	object group_leader_lrel;
+	object lrel;
+		
+	send_wait(0, top_object(), "get_co_group"); //Instancia grupo líder
+	group_leader_lrel = msg[0]; 
+	send_wait(0, top_object(), "call_attr", "z_calculatempoSLA", "get_new_dob", NULL, NULL, group_leader_lrel);
+	
+	lrel = msg[0];//Instância objeto para gravação de nova linha
+	
+	if ((int)zTempoWF == 900 || (int)zTempoWF > 900 && status=="CR_TENANT_NAME") //verifica se eh SLA de 15 minutos
+	{
+		lrel.SLA15min = format("OK");
+		lrel.zpersid = persistent_id;
+		lrel.zref_num = ref_num;
+
+		}else{
+			lrel.SLA15min = format("NOK");
+			lrel.zpersid = persistent_id;
+			lrel.zref_num = ref_num;
+
+	}
+	
+	if ((int)zTempoWF == 7200 || (int)zTempoWF > 7200 && status == "CR_TENANT_NAME") //verifica se eh SLA de 2 horas
+	{
+		lrel.SLA2horas = format("OK");
+		lrel.zpersid = persistent_id;
+		lrel.zref_num = ref_num;
+
+		}else{
+			lrel.SLA2horas = format("NOK");
+			lrel.zpersid = persistent_id;
+			lrel.zref_num = ref_num;
+	}
+	
+	if ((int)zTempoWF == 14400 || (int)zTempoWF > 14400 && status == "CR_TENANT_NAME") //verifica se eh SLA de 4 horas
+	{
+		lrel.SLA4horas = format("OK");
+		lrel.zpersid = persistent_id;
+		lrel.zref_num = ref_num;
+		}else{
+			lrel.SLA4horas = format("NOK");
+			lrel.zpersid = persistent_id;
+			lrel.zref_num = ref_num;
+	}	
+	
+	if ((int)zTempoWF == 21600 || (int)zTempoWF > 21600 && status == "CR_TENANT_NAME") //verifica se eh SLA de 6 horas
+	{
+		lrel.SLA6horas = format("OK");
+		lrel.zpersid = persistent_id;
+		lrel.zref_num = ref_num;
+		}else{
+			lrel.SLA6horas = format("NOK");
+			lrel.zpersid = persistent_id;
+			lrel.zref_num = ref_num;
+	}
+	
+	if ((int)zTempoWF == 172800 || (int)zTempoWF > 172800 && status == "CR_TENANT_NAME") //verifica se eh SLA de 48 horas
+	{
+		lrel.SLA48horas = format("OK");
+		lrel.zpersid = persistent_id;
+		lrel.zref_num = ref_num;
+		}else{
+			lrel.SLA48horas = format("NOK");
+			lrel.zpersid = persistent_id;
+			lrel.zref_num = ref_num;
+	}
+	
+	if ((int)zTempoWF == 259200 || (int)zTempoWF > 259200 && status=="CR_TENANT_NAME") //verifica se eh SLA de 72 horas
+	{
+		lrel.SLA72horas = format("OK");
+		lrel.zpersid = persistent_id;
+		lrel.zref_num = ref_num;
+		}else{
+			lrel.SLA72horas = format("NOK");
+			lrel.zpersid = persistent_id;
+			lrel.zref_num = ref_num;
+	}
+	
+	if ((int)zTempoWF == 345600 || (int)zTempoWF > 345600 && status == "CR_TENANT_NAME") //verifica se eh SLA de 96 horas
+	{
+		lrel.SLA96horas = format("OK");
+		lrel.zpersid = persistent_id;
+		lrel.zref_num = ref_num;
+		}else{
+			lrel.SLA96horas = format("NOK");
+			lrel.zpersid = persistent_id;
+			lrel.zref_num = ref_num;
+	}		
+	
+	if ((int)zTempoWF == 388800 || (int)zTempoWF > 388800 && status == "CR_TENANT_NAME") //verifica se eh SLA de 108 horas
+	{
+		lrel.SLA108horas = format("OK");
+		lrel.zpersid = persistent_id;
+		lrel.zref_num = ref_num;
+		}else{
+			lrel.SLA108horas = format("NOK");
+			lrel.zpersid = persistent_id;
+			lrel.zref_num = ref_num;
+	}
+	
+	send_wait(0, group_leader_lrel, "checkin"); //Faz checkin de memória para banco de dados
+	
+	
+}	
